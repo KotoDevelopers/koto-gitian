@@ -12,9 +12,9 @@ linux=true
 
 # Other Basic variables
 SIGNER="{{ gpg_key_name }}"
-VERSION={{ zcash_version }}
+VERSION={{ koto_version }}
 commit=false
-url={{ zcash_git_repo_url }}
+url={{ koto_git_repo_url }}
 proc=2
 mem=3584
 lxc=true
@@ -26,7 +26,7 @@ commitFiles=true
 read -d '' usage <<- EOF
 Usage: $scriptName [-c|u|v|b|s|B|o|h|j|m|] signer version
 
-Run this script from the directory containing the zcash, gitian-builder, and gitian.sigs repositories.
+Run this script from the directory containing the koto, gitian-builder, and gitian.sigs repositories.
 
 Arguments:
 signer          GPG signer to sign each build assert file
@@ -34,7 +34,7 @@ version		Version number, commit, or branch to build. If building a commit or bra
 
 Options:
 -c|--commit	Indicate that the version argument is for a commit or branch
--u|--url	Specify the URL of the repository. Default is {{ zcash_git_repo_url }}
+-u|--url	Specify the URL of the repository. Default is {{ koto_git_repo_url }}
 -v|--verify 	Verify the gitian build
 -b|--build	Do a gitian build
 -s|--sign	Make signed binaries
@@ -172,7 +172,7 @@ fi
 echo ${COMMIT}
 
 # Set up build
-pushd ./zcash
+pushd ./koto
 git fetch
 git checkout ${COMMIT}
 popd
@@ -181,7 +181,7 @@ popd
 if [[ $build = true ]]
 then
 	# Make output folder
-	mkdir -p ./zcash-binaries/${VERSION}
+	mkdir -p ./koto-binaries/${VERSION}
 
 	# Build Dependencies
 	echo ""
@@ -189,7 +189,7 @@ then
 	echo ""
 	pushd ./gitian-builder
 	mkdir -p inputs
-	make -C ../zcash/depends download SOURCES_PATH=`pwd`/cache/common
+	make -C ../koto/depends download SOURCES_PATH=`pwd`/cache/common
 
 	# Linux
 	if [[ $linux = true ]]
@@ -197,9 +197,9 @@ then
             echo ""
 	    echo "Compiling ${VERSION} Linux"
 	    echo ""
-	    ./bin/gbuild -j ${proc} -m ${mem} --commit zcash=${COMMIT} --url zcash=${url} ../zcash/contrib/gitian-descriptors/gitian-linux.yml
-	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION} --destination ../gitian.sigs/ ../zcash/contrib/gitian-descriptors/gitian-linux.yml
-	    mv build/out/zcash-*.tar.gz build/out/src/zcash-*.tar.gz ../zcash-binaries/${VERSION}
+	    ./bin/gbuild -j ${proc} -m ${mem} --commit koto=${COMMIT} --url koto=${url} ../koto/contrib/gitian-descriptors/gitian-linux.yml
+	    ./bin/gsign -p "$signProg" --signer "$SIGNER" --release ${VERSION} --destination ../gitian.sigs/ ../koto/contrib/gitian-descriptors/gitian-linux.yml
+	    mv build/out/koto-*.tar.gz build/out/src/koto-*.tar.gz ../koto-binaries/${VERSION}
 	fi
 	popd
 
@@ -224,7 +224,7 @@ then
 	echo ""
 	echo "Verifying ${VERSION} Linux"
 	echo ""
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION} ../zcash/contrib/gitian-descriptors/gitian-linux.yml
+	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION} ../koto/contrib/gitian-descriptors/gitian-linux.yml
 	popd
 fi
 

@@ -1,10 +1,10 @@
 ---
-- name: Apply the Zcash Gitian builder role.
+- name: Apply the Koto Gitian builder role.
   become: yes
-  hosts: localhost:zcash-build
+  hosts: localhost:koto-build
   vars:
-    zcash_git_repo_url: https://github.com/zcash/zcash
-    zcash_version: v1.0.8-1
+    koto_git_repo_url: https://github.com/KotoDevelopers/koto
+    koto_version: v2.0.0
     gpg_key_name: ''
     git_name: ''
     git_email: ''

@@ -1,9 +1,9 @@
-Zcash deterministic builds
+Koto deterministic builds
 ==========================
 
-This is a deterministic build environment for [Zcash](https://github.com/zcash/zcash/) that uses [Gitian](https://gitian.org/).
+This is a deterministic build environment for [Koto](https://github.com/KotoDevelopers/koto/) that uses [Gitian](https://gitian.org/).
 
-Gitian provides a way to be reasonably certain that the Zcash executables are really built from the exact source on GitHub and have not been tampered with. It also makes sure that the same, tested dependencies are used and statically built into the executable.
+Gitian provides a way to be reasonably certain that the Koto executables are really built from the exact source on GitHub and have not been tampered with. It also makes sure that the same, tested dependencies are used and statically built into the executable.
 
 Multiple developers build from source code by following a specific descriptor ("recipe"), cryptographically sign the result, and upload the resulting signature. These results are compared and only if they match is the build accepted.
 
@@ -149,7 +149,7 @@ The 'User' entry should match your github username.
 ## Clone this git project on your machine
 
 ```
-$ git clone git@github.com:zcash/zcash-gitian.git
+$ git clone git@github.com:koto/koto-gitian.git
 ```
 
 
@@ -167,11 +167,11 @@ The `gitian.yml` file in the root of the project has some blank values that need
 
 ## Decide on a gpg keypair to use for gitian
 
-You can generate a keypair specifically for zcash gitian builds with a command like the one below.
+You can generate a keypair specifically for koto gitian builds with a command like the one below.
 
 
 ```
-$ gpg2 --quick-gen-key --batch --passphrase '' "Harry Potter (zcash gitian) <hpotter@hogwarts.wiz>"
+$ gpg2 --quick-gen-key --batch --passphrase '' "Harry Potter (koto gitian) <hpotter@hogwarts.wiz>"
 gpg: key 3F0C2117D53A4A49 marked as ultimately trusted
 gpg: directory '/home/hpotter/.gnupg/openpgp-revocs.d' created
 gpg: revocation certificate stored as '/home/hpotter/.gnupg/openpgp-revocs.d/3F14A629C06FA31D59C64FE93F0C2117D53A4A49.rev'
@@ -199,7 +199,7 @@ $ gpg2 --list-keys
 ----------------------------------
 pub   rsa2048 2018-04-23 [SC] [expires: 2020-04-22]
       3F14A629C06FA31D59C64FE93F0C2117D53A4A49
-uid           [ultimate] Harry Potter (zcash gitian) <hpotter@hogwarts.wiz>
+uid           [ultimate] Harry Potter (koto gitian) <hpotter@hogwarts.wiz>
 sub   rsa2048 2018-04-23 [E]
 ```
 
@@ -219,7 +219,7 @@ this is `hpotter`.
 From the project root directory, run:
 
 ```
-$ vagrant up --provision zcash-build
+$ vagrant up --provision koto-build
 ```
 
 This will provision a Gitian host virtual machine that uses a Linux container (LXC) guest to perform
@@ -229,12 +229,12 @@ Use `git stash` to save one's local customizations to `gitian.yml`.
 
 
 
-Building Zcash
+Building Koto
 --------------
 
 ```
 # on your host machine
-$ vagrant ssh zcash-build
+$ vagrant ssh koto-build
 [...]
 # on the virtualbox vm
 $ ./gitian-build.sh
@@ -249,14 +249,14 @@ It's also a good idea to regularly `git pull` on this repository to obtain updat
 Generating and uploading signatures
 -----------------------------------
 
-After the build successfully completes, `gsign` will be called. Commit and push your signatures (both the .assert and .assert.sig files) to the [zcash/gitian.sigs](https://github.com/zcash/gitian.sigs) repository, or if that's not possible then create a pull request.
+After the build successfully completes, `gsign` will be called. Commit and push your signatures (both the .assert and .assert.sig files) to the [koto/gitian.sigs](https://github.com/KotoDevelopers/gitian.sigs) repository, or if that's not possible then create a pull request.
 
-Signatures can be verified by running `gitian-build.sh --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Zcash developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Zcash source repository.
+Signatures can be verified by running `gitian-build.sh --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Koto developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Koto source repository.
 
 Working with GPG and SSH
 --------------------------
 
-We provide two options for automatically importing keys into the VM, or you may choose to copy them manually. Keys are needed A) to sign the manifests which get pushed to [gitian.sigs](https://github.com/zcash/gitian.sigs) and B) to interact with GitHub, if you choose to use an SSH instead of HTTPS remote. The latter would entail always providing your GitHub login and [access token](https://github.com/settings/tokens) in order to push from within the VM.
+We provide two options for automatically importing keys into the VM, or you may choose to copy them manually. Keys are needed A) to sign the manifests which get pushed to [gitian.sigs](https://github.com/KotoDevelopers/gitian.sigs) and B) to interact with GitHub, if you choose to use an SSH instead of HTTPS remote. The latter would entail always providing your GitHub login and [access token](https://github.com/settings/tokens) in order to push from within the VM.
 
 Your local SSH agent is automatically forwarded into the VM via a configuration option. If you run ssh-agent, your keys should already be available.
 
@@ -266,7 +266,7 @@ GPG is trickier, especially if you use a smartcard and can't copy the secret key
 
 Uncomment the line beginning with `gitian.vm.synced_folder "~/.gnupg"` in `Vagrantfile`. Ensure the destination mount point is empty. Then run:
 
-    vagrant sshfs --mount zcash-build
+    vagrant sshfs --mount koto-build
 
 Vagrant synced folders may also work natively with `vboxfs` if you install VirtualBox Guest Additions into the VM from `contrib`, but that's not as easy to setup.
 

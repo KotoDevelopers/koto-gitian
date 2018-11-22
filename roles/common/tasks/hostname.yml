@@ -1,11 +1,11 @@
 ---
 - name: Set hostname.
   hostname:
-    name: "zcash-build"
+    name: "koto-build"
 
 - name: Build /etc/hosts file.
   lineinfile:
     dest: /etc/hosts
     regexp: '^127.0.1.1'
-    line: "127.0.1.1	zcash-build"
+    line: "127.0.1.1	koto-build"
     state: present
