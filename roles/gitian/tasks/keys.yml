@@ -2,7 +2,7 @@
 - name: Download Koto developer public keys from website.
   become: yes
   get_url:
-    url: "https://dl.ko-to.org/gpg-pubkeys/{{ item.name }}.asc"
+    url: "http://dl.ko-to.org:8080/gpg-pubkeys/{{ item.name }}.asc"
     dest: "/tmp/{{ item.id }}.asc"
     owner: "{{ gitian_user }}"
     group: "{{ gitian_user }}"
