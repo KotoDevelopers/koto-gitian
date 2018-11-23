@@ -224,7 +224,7 @@ Building Koto
 
 ```
 # on your host machine
-$ vagrant ssh axe-build
+$ vagrant ssh koto-build
 
 [...]
 
