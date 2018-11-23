@@ -2,14 +2,18 @@
 - name: Apply the Koto Gitian builder role.
   become: yes
   hosts: localhost:koto-build
+  gather_facts: False
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
   vars:
     koto_git_repo_url: https://github.com/KotoDevelopers/koto
-    koto_version: v2.0.0
-    gpg_key_name: ''
-    git_name: ''
-    git_email: ''
-    gpg_key_id: '' # optional
-    ssh_key_name: '' # optional
+    koto_version: develop
+    gpg_key_name: 'wo'
+    git_name: 'WO'
+    git_email: 'wo@ko-to.org'
+    gpg_key_id: '' #8BCABC42AC606C7311775A63FD04BBFAD00AFDDE' # optional
+    ssh_key_name: 'id_ecdsa' # optional
   roles:
     - role: common
       tags: common

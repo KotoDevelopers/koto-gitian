@@ -26,26 +26,16 @@ Install the following software:
 - [Ansible](https://www.ansible.com/) 2.4.x or higher
 - [GnuPG](https://www.gnupg.org/) 2.x (2.11.18 or greater) and make sure it is callable via `gpg2`
 
+##### Apple SDK
+
+[Apple SDK](https://github.com/KotoDevelopers/koto/blob/master/doc/README_osx.md) required for macOS builds. Place this tarball (`MacOSX10.11.sdk.tar.gz`) into `koto-gitian` folder and Ansible will copy it during the run.
+
+
 For more detailed recommendations on steps to install these dependencies on some platforms we have
 used, see the following documents:
 
 - [Debian 9.x](dependency_install_steps_by_platform/Debian_9.x.md)
 - [macOS 10.13.x](dependency_install_steps_by_platform/macOS_10.13.x.md)
-
-
-
-## Install the `vagrant-disksize` plugin to support resize of the start up disk:
-
-```
-$ vagrant plugin install vagrant-disksize
-```
-
-Most recently tested 2018-04-23 with the following vagrant-disksize release:
-
-```
-$ vagrant plugin list
-vagrant-disksize (0.1.2)
-```
 
 
 
@@ -234,15 +224,19 @@ Building Koto
 
 ```
 # on your host machine
-$ vagrant ssh koto-build
+$ vagrant ssh axe-build
+
 [...]
+
 # on the virtualbox vm
-$ ./gitian-build.sh
+# replace $SIGNER and $VERSION to match your gitian.yml
+$ ./gitian-build.py -S $SIGNER $VERSION
+$ ./gitian-build.py -B $SIGNER $VERSION
 ```
 
 The output from `gbuild` is informative. There are some common warnings which can be ignored, e.g. if you get an intermittent privileges error related to LXC then just execute the script again. The most important thing is that one reaches the step which says `Running build script (log in var/build.log)`. If not, then something else is wrong and you should let us know.
 
-Take a look at the variables near the top of `~/gitian-build.sh` and get familiar with its functioning, as it can handle most tasks.
+Take a look at the variables near the top of `~/gitian-build.py` and get familiar with its functioning, as it can handle most tasks.
 
 It's also a good idea to regularly `git pull` on this repository to obtain updates and re-run the entire VM provisioning for each release, to ensure current and consistent state for your builder.
 
@@ -251,7 +245,7 @@ Generating and uploading signatures
 
 After the build successfully completes, `gsign` will be called. Commit and push your signatures (both the .assert and .assert.sig files) to the [koto/gitian.sigs](https://github.com/KotoDevelopers/gitian.sigs) repository, or if that's not possible then create a pull request.
 
-Signatures can be verified by running `gitian-build.sh --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Koto developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Koto source repository.
+Signatures can be verified by running `gitian-build.py --verify`, but set `build=false` in the script to skip building. Run a `git pull` beforehand on `gitian.sigs` so you have the latest. The provisioning includes a task which imports Koto developer public keys to the Vagrant user's keyring and sets them to ultimately trusted, but they can also be found at `contrib/gitian-downloader` within the Koto source repository.
 
 Working with GPG and SSH
 --------------------------

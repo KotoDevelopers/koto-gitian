@@ -1,11 +1,11 @@
 ---
-koto_swapfile_size: 1G
+koto_swapfile_size: 2G
 koto_vm_swappiness: 1
 koto_common_packages:
   - apt-show-versions
   - apt-transport-https
   - curl
-  - git-core
+  - git
   - haveged
   - htop
   - ntp
